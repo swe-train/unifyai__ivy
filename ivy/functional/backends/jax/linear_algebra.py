@@ -77,7 +77,7 @@ def diagonal(
     axis2: int = -1,
     out: Optional[JaxArray] = None,
 ) -> JaxArray:
-    if not x.dtype == bool and not jnp.issubdtype(x.dtype, jnp.integer):
+    if x.dtype != bool and not jnp.issubdtype(x.dtype, jnp.integer):
         ret = jnp.diagonal(x, offset=offset, axis1=axis1, axis2=axis2)
         ret_edited = jnp.diagonal(
             x.at[1 / x == -jnp.inf].set(-jnp.inf),
@@ -371,7 +371,10 @@ def svd(
     {"0.4.19 and below": ("bfloat16", "float16", "complex")},
     backend_version,
 )
-def svdvals(x: JaxArray, /, *, out: Optional[JaxArray] = None) -> JaxArray:
+def svdvals(
+    x: JaxArray, /, *, driver: Optional[str] = None, out: Optional[JaxArray] = None
+) -> JaxArray:
+    # TODO: handling the driver argument
     return jnp.linalg.svd(x, compute_uv=False)
 
 
